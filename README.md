@@ -3,10 +3,12 @@
 # To Run
 To set up each process run
 > go run . -s [id]
+
 where [id] is the process id specified in config.txt
 
 To send a message simply type
 > send [destination] [message]
+
 where destination is the id of the destination node and [message] is the message you want to send
 
 # Code Decisions and Process
