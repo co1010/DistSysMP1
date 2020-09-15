@@ -2,10 +2,9 @@ package main
 
 import (
 	"bufio"
-	"encoding/gob"
 	"fmt"
-	"net"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -22,16 +21,6 @@ func checkError(err error) {
 		os.Exit(1)
 	}
 }
-
-func startProcesses() {
-	filelines := readFile("config.txt")
-	for _, line := range filelines[1:] {
-		process := strings.Split(line, " ")
-		ch := make(chan net.Conn)
-		go startServer(process[0], process[1], ":"+process[2], ch)
-	}
-}
-
 
 func readFile(filename string) []string{
 	file, err := os.Open(filename)
@@ -50,29 +39,6 @@ func readFile(filename string) []string{
 	return txtlines
 }
 
-func startServer(id, ip, port string, ch chan net.Conn) {
-	ln, err := net.Listen("tcp", port)
-	checkError(err)
-	defer ln.Close()
-	for {
-		conn, err := ln.Accept()
-		checkError(err)
-		decoder := gob.NewDecoder(conn)
-		var message Message
-		decoder.Decode(&message)
-		unicast_receive(conn.RemoteAddr().String(), message)
-	}
-}
-
-func handleConnection(c net.Conn) {
-	fmt.Printf("Serving %s\n", c.RemoteAddr().String())
-	netData, err := bufio.NewReader(c).ReadString('\n')
-	checkError(err)
-
-	temp := strings.TrimSpace(netData)
-	fmt.Println(temp)
-}
-
 // Clean this up later
 func getNodeDetails(node string) (string, string){
 	lines := readFile("config.txt")
@@ -83,4 +49,12 @@ func getNodeDetails(node string) (string, string){
 		}
 	}
 	return "", ""
+}
+
+func getDelayParams() (int, int) {
+	lines := readFile("config.txt")
+	line := strings.Split(lines[0], " ")
+	min, _ := strconv.Atoi(line[0])
+	max, _ := strconv.Atoi(line[1])
+	return min, max
 }

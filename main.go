@@ -2,13 +2,28 @@ package main
 
 import (
 	"bufio"
+	"fmt"
+	"github.com/akamensky/argparse"
 	"os"
 	"strings"
 	"time"
 )
 
 func main() {
-	startProcesses()
+	// Create new parser object
+	parser := argparse.NewParser("Process", "Saves which process is running")
+	// Create string flag
+	s := parser.String("s", "string", &argparse.Options{Required: true, Help: "Input Process ID"})
+	// Parse input
+	err := parser.Parse(os.Args)
+	if err != nil {
+		// In case of error print error and print usage
+		// This can also be done by passing -h or --help flags
+		fmt.Print(parser.Usage(err))
+	}
+
+	go startServer(s)
+
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		text, _ := reader.ReadString('\n')
