@@ -7,12 +7,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type Message struct {
 	Content string
-	Time time.Time
 }
 
 // Consolidated repeated error checks into a single function
