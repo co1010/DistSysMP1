@@ -7,7 +7,6 @@ import (
 	"github.com/akamensky/argparse"
 	"os"
 	"strings"
-	"time"
 )
 
 func main() {
@@ -39,7 +38,7 @@ func main() {
 
 		// If the user enters the send command, call unicast_send as a goroutine
 		if input[0] == "send" {
-			message := utils.Message{content, time.Now()}
+			message := utils.Message{Content: content}
 			go unicast_send(input[1], message)
 		}
 	}
