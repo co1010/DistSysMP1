@@ -31,3 +31,6 @@ Messages are sent using Message structs which contain only a content field (stri
 
 # Limitations and Shortcomings
 No code is perfect, and every implementation has some sort of flaw. One drawback to my implementation is that only 1 message can be sent to a server before it closes. This is due to defer ln.Close() on line 25 in server.go. This closes the connection after receiving a single message. One possible fix would be to put line 26-30 in an infinite for loop. This brings up a different problem which is then that the server never closes. An implementation using channels to eventually close the server when given a command is probably possible but out of the scope of this project.
+
+# Potential Future-proofing
+I think this design is fine for a project of this size, but there are some flaws in the design if I were to scale it up to a bigger project in the future. Instead of keeping everything in the same MP1 directory it would be better if I broke up the files into subpackages. These subpackages could be based off of the "layers" analogy, with an application and network package. Each package would have functions specific that that layer. This would allow easy code expansion because the different functions would be organized according to layer purpose.
